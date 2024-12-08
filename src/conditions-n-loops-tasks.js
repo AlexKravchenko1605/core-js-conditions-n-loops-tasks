@@ -115,8 +115,34 @@ function isIsoscelesTriangle(a, b, c) {
  *  10  => X
  *  26  => XXVI
  */
-function convertToRomanNumerals(/* num */) {
-  throw new Error('Not implemented');
+function convertToRomanNumerals(num) {
+  if (num < 1 || num > 39) {
+    return 'Invalid number';
+  }
+
+  let roman = '';
+  let remaining = num;
+
+  while (remaining > 0) {
+    if (remaining >= 10) {
+      roman += 'X';
+      remaining -= 10;
+    } else if (remaining >= 9) {
+      roman += 'IX';
+      remaining -= 9;
+    } else if (remaining >= 5) {
+      roman += 'V';
+      remaining -= 5;
+    } else if (remaining === 4) {
+      roman += 'IV';
+      remaining -= 4;
+    } else {
+      roman += 'I';
+      remaining -= 1;
+    }
+  }
+
+  return roman;
 }
 
 /**
@@ -271,8 +297,25 @@ function isContainNumber(num, digit) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  for (let i = 0; i < arr.length; i += 1) {
+    let leftSum = 0;
+    let rightSum = 0;
+
+    for (let j = 0; j < i; j += 1) {
+      leftSum += arr[j];
+    }
+
+    for (let k = i + 1; k < arr.length; k += 1) {
+      rightSum += arr[k];
+    }
+
+    if (leftSum === rightSum) {
+      return i;
+    }
+  }
+
+  return -1;
 }
 
 /**
@@ -296,8 +339,52 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = new Array(size);
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = new Array(size);
+    for (let j = 0; j < size; j += 1) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  let startRow = 0;
+  let endRow = size - 1;
+  let startCol = 0;
+  let endCol = size - 1;
+  let number = 1;
+
+  while (startRow <= endRow && startCol <= endCol) {
+    for (let col = startCol; col <= endCol; col += 1) {
+      matrix[startRow][col] = number;
+      number += 1;
+    }
+    startRow += 1;
+
+    for (let row = startRow; row <= endRow; row += 1) {
+      matrix[row][endCol] = number;
+      number += 1;
+    }
+    endCol -= 1;
+
+    if (startRow <= endRow) {
+      for (let col = endCol; col >= startCol; col -= 1) {
+        matrix[endRow][col] = number;
+        number += 1;
+      }
+      endRow -= 1;
+    }
+
+    if (startCol <= endCol) {
+      for (let row = endRow; row >= startRow; row -= 1) {
+        matrix[row][startCol] = number;
+        number += 1;
+      }
+      startCol += 1;
+    }
+  }
+
+  return matrix;
 }
 
 /**
@@ -315,8 +402,30 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const newMatrix = matrix;
+  const result = new Array(matrix.length);
+
+  for (let i = 0; i < matrix.length; i += 1) {
+    result[i] = new Array(matrix.length);
+  }
+
+  let matrixStart = 0;
+  const matrixEnd = matrix.length - 1;
+
+  for (let i = 0; i <= matrixEnd; i += 1) {
+    for (let j = 0; j <= matrixEnd; j += 1) {
+      result[i][j] = matrix[matrixEnd - j][matrixStart];
+    }
+    matrixStart += 1;
+  }
+
+  for (let i = 0; i <= matrixEnd; i += 1) {
+    for (let j = 0; j <= matrixEnd; j += 1) {
+      newMatrix[i][j] = result[i][j];
+    }
+  }
+  return newMatrix;
 }
 
 /**
@@ -333,8 +442,34 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  function partitionArray(array, left, right) {
+    const myArray = array;
+    const pivotElement = myArray[right];
+    let i = left - 1;
+
+    for (let j = left; j <= right - 1; j += 1) {
+      if (myArray[j] < pivotElement) {
+        i += 1;
+        [myArray[i], myArray[j]] = [myArray[j], myArray[i]];
+      }
+    }
+
+    [myArray[i + 1], myArray[right]] = [myArray[right], myArray[i + 1]];
+
+    return i + 1;
+  }
+
+  function quickSort(array, left = 0, right = array.length - 1) {
+    if (left < right) {
+      const newPivotIndex = partitionArray(array, left, right);
+      quickSort(array, left, newPivotIndex - 1);
+      quickSort(array, newPivotIndex + 1, right);
+    }
+  }
+
+  quickSort(arr);
+  return arr;
 }
 
 /**
@@ -354,8 +489,31 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  let rounds = iterations;
+  let result = str;
+
+  while (rounds) {
+    let left = '';
+    let right = '';
+
+    for (let i = 0; i < result.length; i += 1) {
+      if (i % 2 !== 0) {
+        right += result[i];
+      } else {
+        left += result[i];
+      }
+    }
+
+    result = `${left}${right}`;
+    rounds -= 1;
+
+    if (result === str) {
+      rounds = iterations % (iterations - rounds);
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -375,8 +533,49 @@ function shuffleChar(/* str, iterations */) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
+function getNearestBigger(number) {
+  let digits = [];
+  let temp = number;
+  while (temp > 0) {
+    digits.push(temp % 10);
+    temp = Math.floor(temp / 10);
+  }
+  digits = digits.reverse();
+
+  let i = digits.length - 2;
+  while (i >= 0 && digits[i] >= digits[i + 1]) {
+    i -= 1;
+  }
+
+  if (i < 0) {
+    return number;
+  }
+
+  let j = digits.length - 1;
+  while (digits[j] <= digits[i]) {
+    j -= 1;
+  }
+
+  let tempDigit = digits[i];
+  digits[i] = digits[j];
+  digits[j] = tempDigit;
+
+  let left = i + 1;
+  let right = digits.length - 1;
+  while (left < right) {
+    tempDigit = digits[left];
+    digits[left] = digits[right];
+    digits[right] = tempDigit;
+    left += 1;
+    right -= 1;
+  }
+
+  let result = 0;
+  for (let k = 0; k < digits.length; k += 1) {
+    result = result * 10 + digits[k];
+  }
+
+  return result;
 }
 
 module.exports = {
